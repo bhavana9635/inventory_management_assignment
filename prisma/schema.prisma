@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id               String         @id @default(cuid())
+  name             String
+  sku              String         @unique
+  totalQuantity    Int
+  reservedQuantity Int            @default(0)
+  soldQuantity     Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  reservations     Reservation[]
+
+  @@map("products")
+}
+
+model Reservation {
+  id           String    @id @default(cuid())
+  productId    String
+  product      Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customerEmail String
+  quantity     Int
+  status       String    @default("PENDING")
+  expiresAt    DateTime
+  createdAt    DateTime  @default(now())
+  confirmedAt  DateTime?
+  releasedAt   DateTime?
+  updatedAt    DateTime  @updatedAt
+
+  @@index([productId])
+  @@index([status])
+  @@index([expiresAt])
+  @@map("reservations")
+}
+
+model IdempotencyRecord {
+  id              String    @id @default(cuid())
+  idempotencyKey  String    @unique
+  status          String    @default("PENDING")
+  responseStatus  Int?
+  responseBody    Json?
+  createdAt       DateTime  @default(now())
+  expiresAt       DateTime
+
+  @@index([idempotencyKey])
+  @@index([expiresAt])
+  @@map("idempotency_records")
+}
