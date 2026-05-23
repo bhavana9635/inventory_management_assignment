@@ -1,4 +1,5 @@
-﻿# Inventory Reservation System
+LINK : https://inventory-management-assignment-iag.vercel.app?_vercel_share=ia0RdnFH8MMWBAs8lUU0q8JVyVt2JwKO
+ # Inventory Reservation System
 
 A production-ready inventory reservation app with Redis-backed distributed locking, lazy reservation cleanup, and a clean Next.js + Supabase architecture.
 
